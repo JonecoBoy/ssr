@@ -59,12 +59,12 @@ type SsrRequest struct {
 	Proto         string
 	Host          string
 	Pattern       map[string]string
-	Params        *NinaParamsRequest
+	Params        *SsrParamsRequest
 	body          interface{}
 	ValidatedData map[string]string
 }
 
-type NinaParamsRequest struct {
+type SsrParamsRequest struct {
 	QueryString map[string]string
 	UriParams   map[string]string
 	Params      map[string]string
@@ -93,7 +93,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -187,7 +187,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 
 		// Set up request parameters
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -284,7 +284,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 
 		// Set up request parameters
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -320,7 +320,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -386,7 +386,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -419,7 +419,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -452,7 +452,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
@@ -485,7 +485,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			return
 		}
 		reqParams := getReqParams(r, pattern)
-		params := &NinaParamsRequest{
+		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
 			Params:      reqParams["params"],
