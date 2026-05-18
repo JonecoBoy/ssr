@@ -1,23 +1,24 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func TestTimeoutMiddleware(t *testing.T) {
 	// Define a simple handler that sleeps for 2 seconds
-	slowHandler := func(w http.ResponseWriter, r *router.NinaRequest) {
+	slowHandler := func(w http.ResponseWriter, r *router.SsrRequest) {
 		time.Sleep(2 * time.Second)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
 
 	// Define a fast handler that responds immediately
-	fastHandler := func(w http.ResponseWriter, r *router.NinaRequest) {
+	fastHandler := func(w http.ResponseWriter, r *router.SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}

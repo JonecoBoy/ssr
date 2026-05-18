@@ -1,4 +1,4 @@
-module github.com/jonecoboy/nina/auth/jwt
+module github.com/jonecoboy/ssr/auth/jwt
 
 go 1.23.4
 

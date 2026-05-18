@@ -2,7 +2,7 @@ package main
 
 import (
 "fmt"
-ninaRouter "github.com/jonecoboy/nina/router"
+ssRouter "github.com/jonecoboy/ssr/router"
 "net/http"
 "time"
 )
@@ -22,24 +22,24 @@ func main() {
 // todo presentation para dar match com o return application. e add parser
 // add viper pro .env
 // todo criar roteador  / grupo no router tpo /joneco sub routes
-roteador := ninaRouter.NewRouter()
+roteador := ssRouter.NewRouter()
 
 	roteador.GET("/hello/{id}/{abc}", helloHandler, nil)
 
 	adminGroup := roteador.GROUP("/admin", nil, nil)
 
-	adminGroup.GET("/", func(w http.ResponseWriter, r *ninaRouter.NinaRequest) { fmt.Println("Request to / from group") }, nil)
+	adminGroup.GET("/", func(w http.ResponseWriter, r *ssRouuter.SsrRequest) { fmt.Println("Request to / from group") }, nil)
 	adminGroup.GET("/hello", helloHandler, nil)
-	adminGroup.POST("/hello", func(w http.ResponseWriter, r *ninaRouter.NinaRequest) {
+	adminGroup.POST("/hello", func(w http.ResponseWriter, r *ssRouuter.ssrRequest) {
 		fmt.Fprint(w, "Hello from post")
-	}, []ninaRouter.Middleware{})
+	}, []ssRouuter.Middleware{})
 
 	fmt.Println("Server is running on port 8081")
 	http.ListenAndServe(":8081", roteador)
 
 }
 
-func helloHandler(w http.ResponseWriter, r *ninaRouter.NinaRequest) {
+func helloHandler(w http.ResponseWriter, r *ssRouuter.ssrRequest) {
 fmt.Fprint(w, "Hello from get")
 }
 

@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"strings"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func ContentTypeBlockMiddleware(blockedTypes []string) router.Middleware {
@@ -13,7 +14,7 @@ func ContentTypeBlockMiddleware(blockedTypes []string) router.Middleware {
 	}
 
 	return func(next router.Handler) router.Handler {
-		return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+		return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 			contentType := r.Header.Get("Content-Type")
 			for blockedType := range blocked {
 				if strings.HasPrefix(contentType, blockedType) {

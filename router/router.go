@@ -20,9 +20,9 @@ type ServeMux struct {
 	*http.ServeMux
 }
 
-type Handler func(w http.ResponseWriter, r *NinaRequest)
+type Handler func(w http.ResponseWriter, r *SsrRequest)
 
-func (h Handler) ServeHTTP(writer http.ResponseWriter, request *NinaRequest) {
+func (h Handler) ServeHTTP(writer http.ResponseWriter, request *SsrRequest) {
 	// Call the original golang http handler
 	h(writer, request)
 }
@@ -43,7 +43,7 @@ type GenericXML struct {
 	Nodes   []GenericXML `xml:",any"`
 }
 
-type NinaRequest struct {
+type SsrRequest struct {
 	*http.Request
 	Header        http.Header
 	ContentLength int64
@@ -70,7 +70,7 @@ type NinaParamsRequest struct {
 	Params      map[string]string
 }
 
-func (nr *NinaRequest) GetBody() (map[string]interface{}, error) {
+func (nr *SsrRequest) GetBody() (map[string]interface{}, error) {
 	// Check if the body exists
 	if nr.body == nil {
 		return nil, fmt.Errorf("body is empty or not initialized")
@@ -99,7 +99,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -114,7 +114,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -193,8 +193,8 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 			Params:      reqParams["params"],
 		}
 
-		// Create the custom NinaRequest
-		ninaRequest := &NinaRequest{
+		// Create the custom ssrRequest
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -211,7 +211,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 			body:          parsedBody, // Store the unified map
 		}
 
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -290,8 +290,8 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 			Params:      reqParams["params"],
 		}
 
-		// Create the custom NinaRequest
-		ninaRequest := &NinaRequest{
+		// Create the custom ssrRequest
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -308,7 +308,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 			body:          parsedBody, // Store the unified map
 		}
 
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -326,7 +326,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -341,7 +341,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -392,7 +392,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -407,7 +407,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -425,7 +425,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -440,7 +440,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -458,7 +458,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -473,7 +473,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -491,7 +491,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			Params:      reqParams["params"],
 		}
 
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -506,7 +506,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 
@@ -622,7 +622,7 @@ func parseUriParams(r *http.Request, pattern string) map[string]string {
 	return params
 }
 
-func (r *NinaRequest) SetContext(ctx context.Context) {
+func (r *SsrRequest) SetContext(ctx context.Context) {
 	r.Request = r.Request.WithContext(ctx)
 }
 

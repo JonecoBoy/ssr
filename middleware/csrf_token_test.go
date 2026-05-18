@@ -6,15 +6,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	ninaRouter "github.com/jonecoboy/nina/router"
+	ssRouter "github.com/jonecoboy/ssr/router"
 )
 
 func TestCSRFMiddleware(t *testing.T) {
 	// Create a new router
-	nr := ninaRouter.NewRouter()
+	nr := ssRouter.NewRouter()
 
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *ninaRouter.NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *ssRouter.SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
@@ -24,7 +24,7 @@ func TestCSRFMiddleware(t *testing.T) {
 	nr.HEAD("/hello", helloHandler, nil)
 	nr.OPTIONS("/hello", helloHandler, nil)
 	nr.TRACE("/hello", helloHandler, nil)
-	nr.POST("/hello", helloHandler, []ninaRouter.Middleware{CSRFGenerateMiddleware, CSRFValidateMiddleware})
+	nr.POST("/hello", helloHandler, []ssRouter.Middleware{CSRFGenerateMiddleware, CSRFValidateMiddleware})
 
 	tests := []struct {
 		name       string

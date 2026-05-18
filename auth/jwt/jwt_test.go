@@ -1,9 +1,10 @@
-package ninaJWT
+package ssrJWT
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"testing"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestGenerateAndVerifyToken(t *testing.T) {

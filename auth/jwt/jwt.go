@@ -1,9 +1,10 @@
-package ninaJWT
+package ssrJWT
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Secret key for signing tokens (keep it secure)

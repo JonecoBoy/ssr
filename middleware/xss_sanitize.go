@@ -1,16 +1,17 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
-	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+
+	"github.com/jonecoboy/ssr/router"
+	"github.com/microcosm-cc/bluemonday"
 )
 
 func XSSSanitizeMiddleware() router.Middleware {
 	policy := bluemonday.UGCPolicy()
 
 	return func(next router.Handler) router.Handler {
-		return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+		return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 			// Sanitize query parameters
 			query := r.URL.Query()
 			for key, values := range query {

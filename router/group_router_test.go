@@ -11,7 +11,7 @@ func TestGroupRouter(t *testing.T) {
 	nr := NewRouter()
 
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}

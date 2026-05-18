@@ -2,12 +2,13 @@ package middleware
 
 import (
 	"bytes"
-	"github.com/jonecoboy/nina/router"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func TestLoggingMiddleware(t *testing.T) {
@@ -15,7 +16,7 @@ func TestLoggingMiddleware(t *testing.T) {
 	nr := router.NewRouter()
 
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *router.NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *router.SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}

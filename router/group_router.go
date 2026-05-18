@@ -24,7 +24,7 @@ func (g *Group) addRoute(method, path string, handler Handler, middlewares []Mid
 	allMiddlewares = append(allMiddlewares, g.postMiddlewares...)
 	finalHandler := applyMiddlewares(handler, allMiddlewares...)
 	g.router.ServeMux.Handle(method+" "+fullPath, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ninaRequest := &NinaRequest{
+		ssrRequest := &SsrRequest{
 			Request:       r,
 			Header:        r.Header,
 			Form:          &r.Form,
@@ -37,7 +37,7 @@ func (g *Group) addRoute(method, path string, handler Handler, middlewares []Mid
 			Host:          r.Host,
 			UserAgent:     r.UserAgent(),
 		}
-		finalHandler(w, ninaRequest)
+		finalHandler(w, ssrRequest)
 	}))
 }
 

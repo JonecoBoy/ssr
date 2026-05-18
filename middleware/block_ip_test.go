@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	ninaRouter "github.com/jonecoboy/nina/router"
+	ssRouuter "github.com/jonecoboy/ssr/router"
 )
 
 func TestBlockIPMiddleware(t *testing.T) {
@@ -13,16 +13,16 @@ func TestBlockIPMiddleware(t *testing.T) {
 	middleware := BlockIPMiddleware(blockedIPs)
 
 	// Create a new router
-	nr := ninaRouter.NewRouter()
+	nr := ssRouuter.NewRouter()
 
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *ninaRouter.NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *ssRouuter.SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
 
 	// Register the route with the handler and middleware
-	nr.GET("/hello", helloHandler, []ninaRouter.Middleware{middleware})
+	nr.GET("/hello", helloHandler, []ssRouuter.Middleware{middleware})
 
 	tests := []struct {
 		name       string

@@ -1,16 +1,17 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func TestRecoverFromPanicMiddleware(t *testing.T) {
 	// Define a handler that panics
-	panicHandler := func(w http.ResponseWriter, r *router.NinaRequest) {
+	panicHandler := func(w http.ResponseWriter, r *router.SsrRequest) {
 		panic("test panic")
 	}
 
@@ -22,14 +23,14 @@ func TestRecoverFromPanicMiddleware(t *testing.T) {
 	req.Header.Set("X-Request-ID", "12345")
 	rr := httptest.NewRecorder()
 
-	// Convert *http.Request to *router.NinaRequest
-	ninaReq := &router.NinaRequest{
+	// Convert *http.Request to *router.SsrRequest
+	ssrReq := &router.SsrRequest{
 		Request: req,
 		Header:  req.Header,
 	}
 
 	// Serve the request
-	handler.ServeHTTP(rr, ninaReq)
+	handler.ServeHTTP(rr, ssrReq)
 
 	// Check the response status code
 	if status := rr.Code; status != http.StatusInternalServerError {

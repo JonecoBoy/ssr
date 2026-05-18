@@ -1,14 +1,15 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"log"
 	"net/http"
 	"runtime/debug"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func RecoverFromPanicMiddleware(next router.Handler) router.Handler {
-	return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+	return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 		defer func() {
 			if err := recover(); err != nil {
 				// Log the panic and backtrace

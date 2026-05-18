@@ -1,14 +1,15 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func LoggingMiddleware(next router.Handler) router.Handler {
-	return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+	return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 		start := time.Now()
 		log.Printf("Started %s %s", r.Method, r.URL.Path)
 

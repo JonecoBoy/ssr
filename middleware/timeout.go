@@ -2,14 +2,15 @@ package middleware
 
 import (
 	"context"
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"time"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func TimeoutMiddleware(timeout time.Duration) router.Middleware {
 	return func(next router.Handler) router.Handler {
-		return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+		return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 			ctx, cancel := context.WithTimeout(r.Context(), timeout)
 			defer cancel()
 

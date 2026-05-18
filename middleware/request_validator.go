@@ -1,13 +1,14 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func RequestValidatorMiddleware(validationMap map[string]string) router.Middleware {
 	return func(next router.Handler) router.Handler {
-		return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+		return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 			validatedData := make(map[string]string)
 			for key, value := range validationMap {
 				if r.FormValue(key) == value {

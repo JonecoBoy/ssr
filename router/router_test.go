@@ -11,21 +11,21 @@ func TestRouter(t *testing.T) {
 	nr := NewRouter()
 
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
 
-	postHandler := func(w http.ResponseWriter, r *NinaRequest) {
+	postHandler := func(w http.ResponseWriter, r *SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
 
-	putHandler := func(w http.ResponseWriter, r *NinaRequest) {
+	putHandler := func(w http.ResponseWriter, r *SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
-	deleteHandler := func(w http.ResponseWriter, r *NinaRequest) {
+	deleteHandler := func(w http.ResponseWriter, r *SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}

@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"strings"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func AllowIPMiddleware(allowedIPs []string) router.Middleware {
@@ -13,7 +14,7 @@ func AllowIPMiddleware(allowedIPs []string) router.Middleware {
 	}
 
 	return func(next router.Handler) router.Handler {
-		return router.Handler(func(w http.ResponseWriter, r *router.NinaRequest) {
+		return router.Handler(func(w http.ResponseWriter, r *router.SsrRequest) {
 			ip := r.RemoteAddr
 			// Remove port from IP address if present
 			if colon := strings.LastIndex(ip, ":"); colon != -1 {

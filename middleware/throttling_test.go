@@ -1,16 +1,17 @@
 package middleware
 
 import (
-	"github.com/jonecoboy/nina/router"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/jonecoboy/ssr/router"
 )
 
 func TestThrottlingMiddleware(t *testing.T) {
 	// Define a simple handler
-	helloHandler := func(w http.ResponseWriter, r *router.NinaRequest) {
+	helloHandler := func(w http.ResponseWriter, r *router.SsrRequest) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
 	}
