@@ -1,6 +1,7 @@
 # SSR - Simple Server Router
 
 A lightweight HTTP router for Go that wraps the standard `http.ServeMux` with additional features like middleware support, route groups, and automatic parameter parsing.
+THIS IS NOT A FRAMEWORK AND DON'T PRETEND TO BE.
 
 ## Installation
 
@@ -58,6 +59,8 @@ api.GET("/users/{id}", getUserHandler, nil)
 ```
 
 ### Middleware
+
+SSR allows you to implement your own middlewares (before(pre) and after (post) request) or use the pre-existing ones. You can chain middlewares and the most left one will be the first.
 
 ```go
 func loggingMiddleware(next router.Handler) router.Handler {
