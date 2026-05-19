@@ -58,3 +58,47 @@ func TestGroupRouter(t *testing.T) {
 		})
 	}
 }
+
+func TestGroupRouterParsesUriAndQueryParams(t *testing.T) {
+	nr := NewRouter()
+	group := nr.GROUP("/products", nil, nil)
+
+	var gotParams *SsrParamsRequest
+	group.GET("/{code}", func(w http.ResponseWriter, r *SsrRequest) {
+		gotParams = r.Params
+		w.WriteHeader(http.StatusOK)
+	}, nil)
+
+	req := httptest.NewRequest(http.MethodGet, "/products/sku-123?joneco=2&abc=456", nil)
+	rr := httptest.NewRecorder()
+
+	nr.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("got status %v, want %v", rr.Code, http.StatusOK)
+	}
+
+	if gotParams == nil {
+		t.Fatal("expected params to be populated")
+	}
+
+	if gotParams.UriParams["code"] != "sku-123" {
+		t.Fatalf("got uri param %q, want %q", gotParams.UriParams["code"], "sku-123")
+	}
+
+	if gotParams.QueryString["joneco"] != "2" {
+		t.Fatalf("got query param %q, want %q", gotParams.QueryString["joneco"], "2")
+	}
+
+	if gotParams.QueryString["abc"] != "456" {
+		t.Fatalf("got query param %q, want %q", gotParams.QueryString["abc"], "456")
+	}
+
+	if gotParams.Params["code"] != "sku-123" {
+		t.Fatalf("got merged param %q, want %q", gotParams.Params["code"], "sku-123")
+	}
+
+	if gotParams.Params["abc"] != "456" {
+		t.Fatalf("got merged param %q, want %q", gotParams.Params["abc"], "456")
+	}
+}

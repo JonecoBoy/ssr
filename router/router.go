@@ -12,7 +12,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -611,15 +611,51 @@ func contains(slice []rune, char rune) bool {
 }
 
 func parseUriParams(r *http.Request, pattern string) map[string]string {
-	re := regexp.MustCompile(`{([^}]*)}`)
-	matches := re.FindAllStringSubmatch(pattern, -1)
+	patternParts := splitRoutePath(extractRoutePath(pattern))
+	requestParts := splitRoutePath(r.URL.Path)
 
 	params := make(map[string]string)
-	for _, match := range matches {
-		params[match[1]] = r.PathValue(match[1])
+	if len(patternParts) != len(requestParts) {
+		return params
+	}
+
+	for idx, patternPart := range patternParts {
+		if isRouteParam(patternPart) {
+			paramName := strings.TrimSuffix(strings.TrimPrefix(patternPart, "{"), "}")
+			if paramName != "" {
+				params[paramName] = requestParts[idx]
+			}
+			continue
+		}
+
+		if patternPart != requestParts[idx] {
+			return map[string]string{}
+		}
 	}
 
 	return params
+}
+
+func extractRoutePath(pattern string) string {
+	parts := strings.SplitN(strings.TrimSpace(pattern), " ", 2)
+	if len(parts) == 2 && strings.HasPrefix(parts[1], "/") {
+		return parts[1]
+	}
+
+	return pattern
+}
+
+func splitRoutePath(path string) []string {
+	trimmed := strings.Trim(path, "/")
+	if trimmed == "" {
+		return nil
+	}
+
+	return strings.Split(trimmed, "/")
+}
+
+func isRouteParam(segment string) bool {
+	return strings.HasPrefix(segment, "{") && strings.HasSuffix(segment, "}")
 }
 
 func (r *SsrRequest) SetContext(ctx context.Context) {
@@ -637,4 +673,8 @@ func applyMiddlewares(h Handler, middlewares ...Middleware) Handler {
 		h = middlewares[i](h)
 	}
 	return h
+}
+
+func (mux *ServeMux) StartServer(port int) {
+	http.ListenAndServe(":"+strconv.Itoa(port), mux)
 }
