@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/ssr_logo.png" alt="SSR Logo" width="200">
+</p>
+
 # SSR - Simple Server Router
 
 A lightweight HTTP router for Go that wraps the standard `http.ServeMux` with additional features like middleware support, route groups, and automatic parameter parsing.
@@ -62,6 +66,8 @@ api.GET("/users/{id}", getUserHandler, nil)
 
 SSR allows you to implement your own middlewares (before(pre) and after (post) request) or use the pre-existing ones. You can chain middlewares and the most left one will be the first.
 
+For a complete list of built-in middlewares, see the [Middleware Documentation](docs/middleware.md).
+
 ```go
 func loggingMiddleware(next router.Handler) router.Handler {
     return func(w http.ResponseWriter, r *router.SsrRequest) {
@@ -92,15 +98,20 @@ api := r.GROUP("/api", []router.Middleware{loggingMiddleware}, nil)
 
 ```go
 r.GET("/products/{code}", func(w http.ResponseWriter, r *router.SsrRequest) {
+    params := r.GetParams()
+
     // URI parameters
-    code := r.Params.UriParams["code"]
+    code := params.UriParams["code"]
 
     // Query string parameters (?page=1&limit=10)
-    page := r.Params.QueryString["page"]
-    limit := r.Params.QueryString["limit"]
+    page := params.QueryString["page"]
+    limit := params.QueryString["limit"]
 
     // Combined params (URI + query string)
-    all := r.Params.Params
+    all := params.Params
+
+    // Or get raw params map directly
+    rawParams := r.GetReqParams()
 }, nil)
 ```
 
@@ -153,7 +164,12 @@ The router automatically parses request bodies based on Content-Type:
 | `Host` | `string` | Request host |
 | `RemoteAddr` | `string` | Client address |
 | `UserAgent` | `string` | User-Agent header |
-| `Params` | `*SsrParamsRequest` | Parsed parameters |
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `GetParams()` | `*SsrParamsRequest` | Get parsed parameters |
+| `GetReqParams()` | `map[string]map[string]string` | Get raw params map |
+| `GetBody()` | `(map[string]interface{}, error)` | Get parsed request body |
 
 ### SsrParamsRequest
 

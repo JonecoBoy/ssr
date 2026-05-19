@@ -42,7 +42,8 @@ func (g *Group) addRoute(method, path string, handler Handler, middlewares []Mid
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			pattern:       fullPath,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}

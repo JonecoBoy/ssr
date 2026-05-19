@@ -58,7 +58,7 @@ type SsrRequest struct {
 	UserAgent     string
 	Proto         string
 	Host          string
-	Pattern       map[string]string
+	pattern       string
 	params        *SsrParamsRequest
 	body          interface{}
 	ValidatedData map[string]string
@@ -85,6 +85,29 @@ func (nr *SsrRequest) GetBody() (map[string]interface{}, error) {
 	return body, nil
 }
 
+func (nr *SsrRequest) GetParams() *SsrParamsRequest {
+	return nr.params
+}
+
+func (nr *SsrRequest) GetReqParams() map[string]map[string]string {
+	qs := parseQueryString(nr.Request)
+	uriParams := parseUriParams(nr.Request, nr.pattern)
+
+	params := make(map[string]map[string]string)
+	params["params"] = make(map[string]string)
+	params["queryString"] = qs
+	params["uriParams"] = uriParams
+
+	for key, value := range qs {
+		params["params"][key] = value
+	}
+	for key, value := range uriParams {
+		params["params"][key] = value
+	}
+
+	return params
+}
+
 func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middleware) {
 	finalHandler := applyMiddlewares(handler, middlewares...)
 	mux.ServeMux.Handle(http.MethodGet+" "+pattern, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +115,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -110,6 +133,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -186,7 +210,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 		}
 
 		// Set up request parameters
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -205,6 +229,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -283,7 +308,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 		}
 
 		// Set up request parameters
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -302,6 +327,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -319,7 +345,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -337,6 +363,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -385,7 +412,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -403,6 +430,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -418,7 +446,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -436,6 +464,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -451,7 +480,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -469,6 +498,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -484,7 +514,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := GetReqParams(r, pattern)
+		reqParams := getReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -502,6 +532,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
+			pattern:       pattern,
 			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
@@ -510,7 +541,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 	}))
 }
 
-func GetReqParams(r *http.Request, pattern string) map[string]map[string]string {
+func getReqParams(r *http.Request, pattern string) map[string]map[string]string {
 	qs := parseQueryString(r)
 	uriParams := parseUriParams(r, pattern)
 

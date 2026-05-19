@@ -65,7 +65,7 @@ func TestGroupRouterParsesUriAndQueryParams(t *testing.T) {
 
 	var gotParams *SsrParamsRequest
 	group.GET("/{code}", func(w http.ResponseWriter, r *SsrRequest) {
-		gotParams = r.Params
+		gotParams = r.GetParams()
 		w.WriteHeader(http.StatusOK)
 	}, nil)
 
