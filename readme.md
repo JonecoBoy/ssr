@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/ssr_logo.png" alt="SSR Logo" width="200">
+  <img src="docs/images/ssr_logo.png" alt="SSR Logo" width="300">
 </p>
 
 # SSR - Simple Server Router
