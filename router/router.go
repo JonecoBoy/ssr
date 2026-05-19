@@ -59,7 +59,7 @@ type SsrRequest struct {
 	Proto         string
 	Host          string
 	Pattern       map[string]string
-	Params        *SsrParamsRequest
+	params        *SsrParamsRequest
 	body          interface{}
 	ValidatedData map[string]string
 }
@@ -92,7 +92,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -110,7 +110,7 @@ func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middlewa
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -186,7 +186,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 		}
 
 		// Set up request parameters
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -205,7 +205,7 @@ func (mux *ServeMux) POST(pattern string, handler Handler, middlewares []Middlew
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 			body:          parsedBody, // Store the unified map
@@ -283,7 +283,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 		}
 
 		// Set up request parameters
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -302,7 +302,7 @@ func (mux *ServeMux) PUT(pattern string, handler Handler, middlewares []Middlewa
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 			body:          parsedBody, // Store the unified map
@@ -319,7 +319,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -337,7 +337,7 @@ func (mux *ServeMux) DELETE(pattern string, handler Handler, middlewares []Middl
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -385,7 +385,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -403,7 +403,7 @@ func (mux *ServeMux) TRACE(pattern string, handler Handler, middlewares []Middle
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -418,7 +418,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -436,7 +436,7 @@ func (mux *ServeMux) OPTIONS(pattern string, handler Handler, middlewares []Midd
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -451,7 +451,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -469,7 +469,7 @@ func (mux *ServeMux) HEAD(pattern string, handler Handler, middlewares []Middlew
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -484,7 +484,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		reqParams := getReqParams(r, pattern)
+		reqParams := GetReqParams(r, pattern)
 		params := &SsrParamsRequest{
 			QueryString: reqParams["queryString"],
 			UriParams:   reqParams["uriParams"],
@@ -502,7 +502,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 			tls:           r.TLS,
 			Proto:         r.Proto,
 			Host:          r.Host,
-			Params:        params,
+			params:        params,
 			UserAgent:     r.UserAgent(),
 			RemoteAddr:    r.RemoteAddr,
 		}
@@ -510,7 +510,7 @@ func (mux *ServeMux) CONNECT(pattern string, handler Handler, middlewares []Midd
 	}))
 }
 
-func getReqParams(r *http.Request, pattern string) map[string]map[string]string {
+func GetReqParams(r *http.Request, pattern string) map[string]map[string]string {
 	qs := parseQueryString(r)
 	uriParams := parseUriParams(r, pattern)
 
