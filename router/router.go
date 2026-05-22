@@ -89,25 +89,6 @@ func (nr *SsrRequest) GetParams() *SsrParamsRequest {
 	return nr.params
 }
 
-func (nr *SsrRequest) GetReqParams() map[string]map[string]string {
-	qs := parseQueryString(nr.Request)
-	uriParams := parseUriParams(nr.Request, nr.pattern)
-
-	params := make(map[string]map[string]string)
-	params["params"] = make(map[string]string)
-	params["queryString"] = qs
-	params["uriParams"] = uriParams
-
-	for key, value := range qs {
-		params["params"][key] = value
-	}
-	for key, value := range uriParams {
-		params["params"][key] = value
-	}
-
-	return params
-}
-
 func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middleware) {
 	finalHandler := applyMiddlewares(handler, middlewares...)
 	mux.ServeMux.Handle(http.MethodGet+" "+pattern, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
