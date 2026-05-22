@@ -14,6 +14,8 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/jonecoboy/ssr/pagination"
 )
 
 type ServeMux struct {
@@ -87,6 +89,17 @@ func (nr *SsrRequest) GetBody() (map[string]interface{}, error) {
 
 func (nr *SsrRequest) GetParams() *SsrParamsRequest {
 	return nr.params
+}
+
+// GetPagination parses pagination parameters from the query string.
+// Uses default page=1 and limit=20 if not provided.
+func (nr *SsrRequest) GetPagination() pagination.Pagination {
+	return pagination.Parse(nr.params.QueryString)
+}
+
+// GetPaginationWithDefaults parses pagination with custom default values.
+func (nr *SsrRequest) GetPaginationWithDefaults(defaultPage, defaultLimit int) pagination.Pagination {
+	return pagination.ParseWithDefaults(nr.params.QueryString, defaultPage, defaultLimit)
 }
 
 func (mux *ServeMux) GET(pattern string, handler Handler, middlewares []Middleware) {

@@ -1,8 +1,14 @@
+# SSR - Simple Server Router
+
 <p align="center">
   <img src="docs/images/ssr_logo_bg.png" alt="SSR Logo" width="300">
 </p>
 
-# SSR - Simple Server Router
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/jonecoboy/ssr)](https://goreportcard.com/report/github.com/jonecoboy/ssr)
+[![Go Reference](https://pkg.go.dev/badge/github.com/jonecoboy/ssr.svg)](https://pkg.go.dev/github.com/jonecoboy/ssr)
+[![Open Source Helpers](https://www.codetriage.com/jonecoboy/ssr/badges/users.svg)](https://www.codetriage.com/jonecoboy/ssr)
+
 
 A lightweight HTTP router for Go that wraps the standard `http.ServeMux` with additional features like middleware support, route groups, and automatic parameter parsing.
 THIS IS NOT A FRAMEWORK AND DON'T PRETEND TO BE.
@@ -33,7 +39,7 @@ package main
 import (
     "fmt"
     "net/http"
-
+	
     "github.com/jonecoboy/ssr/router"
 )
 
